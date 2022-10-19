@@ -4,10 +4,6 @@ import IMask from "imask"
 const ccBgColor01 = document.querySelector(".cc-bg svg > g g:nth-child(1) path")
 const ccBgColor02 = document.querySelector(".cc-bg svg > g g:nth-child(2) path")
 const ccLogo = document.querySelector(".cc-logo span:nth-child(2) img")
-const ccNumber = document.querySelector("#card-number")
-const ccSecurityCode = document.querySelector("#security-code")
-
-console.log(ccSecurityCode)
 
 function setCardType(type) {
   const colors = {
@@ -21,12 +17,40 @@ function setCardType(type) {
 }
 setCardType("mastercard")
 
-function Mask() {
-  const maskOptions = {
-    ccSecurityCode: "0000",
-    ccNumber: "000000000000",
-  }
-  const mask = IMask(ccSecurityCode, maskOptions)
+//Mask Card
+//Card Number
+const ccNumber = document.getElementById("card-number")
+
+//Security code
+const SecurityCode = document.getElementById("security-code")
+const securityCodePatten = {
+  mask: "0000",
 }
+const securityCodeMasked = IMask(SecurityCode, securityCodePatten)
+securityCodeMasked.updateOptions({
+  mask: Number,
+  minLength: 1,
+  maxLength: 4,
+})
+
+//Date Exp
+const expirationDate = document.getElementById("expiration-date")
+const expirationDatePatten = {
+  mask: "MM{/}YY",
+
+  blocks: {
+    YY: {
+      mask: "00",
+    },
+
+    MM: {
+      mask: IMask.MaskedRange,
+      from: 1,
+      to: 12,
+    },
+  },
+}
+
+const expirationDateMasked = IMask(expirationDate, expirationDatePatten)
 
 globalThis.setCardType = setCardType
