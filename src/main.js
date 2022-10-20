@@ -17,30 +17,28 @@ function setCardType(type) {
 }
 setCardType("mastercard")
 
-//Mask Card
-//Card Number
-const ccNumber = document.getElementById("card-number")
-
 //Security code
 const SecurityCode = document.getElementById("security-code")
 const securityCodePatten = {
   mask: "0000",
 }
 const securityCodeMasked = IMask(SecurityCode, securityCodePatten)
-securityCodeMasked.updateOptions({
+/*securityCodeMasked.updateOptions({
   mask: Number,
   minLength: 1,
   maxLength: 4,
-})
+})*/
 
 //Date Exp
 const expirationDate = document.getElementById("expiration-date")
+
 const expirationDatePatten = {
   mask: "MM{/}YY",
-
   blocks: {
     YY: {
-      mask: "00",
+      mask: IMask.MaskedRange,
+      from: String(new Date().getFullYear()).slice(2),
+      to: String(new Date().getFullYear() + 10).slice(2),
     },
 
     MM: {
@@ -50,7 +48,37 @@ const expirationDatePatten = {
     },
   },
 }
-
 const expirationDateMasked = IMask(expirationDate, expirationDatePatten)
+
+//Card Number
+const cardNumber = document.getElementById("card-number")
+const cardNumberPatter = {
+  mask: [
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /^4\d{0,15}/,
+      cardtype: "visa",
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      regex: /(^5[1-5]\d{0,2}|^22[2-9]\d| ^2[3-7]\d{0,2})\d{0,12}/,
+      cardtype: "mastercard",
+    },
+    {
+      mask: "0000 0000 0000 0000",
+      cardtype: "default",
+    },
+  ],
+  dispatch: function (appended, dynamicMasked) {
+    const number = (dynamicMasked.value + appended).replace(/\D/g, "")
+    const foundMask = dynamicMasked.compiledMasks.find(function (item) {
+      return number.match(item.regex)
+    })
+    console.log(foundMask)
+    return foundMask
+  },
+}
+
+const cardNumberMasked = IMask(cardNumber, cardNumberPatter)
 
 globalThis.setCardType = setCardType
