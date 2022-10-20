@@ -74,11 +74,26 @@ const cardNumberPatter = {
     const foundMask = dynamicMasked.compiledMasks.find(function (item) {
       return number.match(item.regex)
     })
-    console.log(foundMask)
     return foundMask
   },
 }
-
 const cardNumberMasked = IMask(cardNumber, cardNumberPatter)
+
+const addButton = document.getElementById("add-card")
+
+addButton.addEventListener("click", () => {
+  console.log("Clicou")
+})
+
+document.querySelector("form").addEventListener("submit", (event) => {
+  event.preventDefault()
+})
+
+const cardHolder = document.getElementById("card-holder")
+
+cardHolder.addEventListener("input", () => {
+  const ccHolder = document.querySelector(".cc-holder .value")
+  ccHolder.innerText = cardHolder.value
+})
 
 globalThis.setCardType = setCardType
