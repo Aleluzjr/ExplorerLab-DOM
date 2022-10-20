@@ -23,11 +23,14 @@ const securityCodePatten = {
   mask: "0000",
 }
 const securityCodeMasked = IMask(SecurityCode, securityCodePatten)
-/*securityCodeMasked.updateOptions({
-  mask: Number,
-  minLength: 1,
-  maxLength: 4,
-})*/
+securityCodeMasked.on("accept", () => {
+  updateSecurityCode(securityCodeMasked.value)
+})
+
+function updateSecurityCode(code) {
+  const ccSecurity = document.querySelector(".cc-security .value")
+  ccSecurity.innerText = code.length === 0 ? "123" : code
+}
 
 //Date Exp
 const expirationDate = document.getElementById("expiration-date")
@@ -49,6 +52,16 @@ const expirationDatePatten = {
   },
 }
 const expirationDateMasked = IMask(expirationDate, expirationDatePatten)
+
+expirationDateMasked.on("accept", () => {
+  updateExpirationDate(expirationDateMasked.value)
+})
+
+function updateExpirationDate(date) {
+  const ccExpiration = document.querySelector(".cc-expiration .value")
+  ccExpiration.innerText =
+    expirationDate.value.length === 0 ? "02/32" : expirationDate.value
+}
 
 //Card Number
 const cardNumber = document.getElementById("card-number")
@@ -79,8 +92,18 @@ const cardNumberPatter = {
 }
 const cardNumberMasked = IMask(cardNumber, cardNumberPatter)
 
-const addButton = document.getElementById("add-card")
+cardNumberMasked.on("accept", () => {
+  const cardType = cardNumberMasked.masked.currentMask.cardtype
+  setCardType(cardType)
+  updateCardNumber(cardNumberMasked.value)
+})
 
+function updateCardNumber(number) {
+  const ccNumber = document.querySelector(".cc-number")
+  ccNumber.innerText = number.length === 0 ? "1234 5678 9012 3456" : number
+}
+
+const addButton = document.getElementById("add-card")
 addButton.addEventListener("click", () => {
   console.log("Clicou")
 })
@@ -90,10 +113,10 @@ document.querySelector("form").addEventListener("submit", (event) => {
 })
 
 const cardHolder = document.getElementById("card-holder")
-
 cardHolder.addEventListener("input", () => {
   const ccHolder = document.querySelector(".cc-holder .value")
-  ccHolder.innerText = cardHolder.value
+  ccHolder.innerText =
+    cardHolder.value.length === 0 ? "FULANO DA SILVA" : cardHolder.value
 })
 
 globalThis.setCardType = setCardType
