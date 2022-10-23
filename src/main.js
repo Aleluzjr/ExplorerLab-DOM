@@ -103,9 +103,12 @@ function updateCardNumber(number) {
   ccNumber.innerText = number.length === 0 ? "1234 5678 9012 3456" : number
 }
 
+const msgWarning = document.querySelector(".warning-flex")
 const addButton = document.getElementById("add-card")
 addButton.addEventListener("click", () => {
-  console.log("Clicou")
+  if (cardNumberMasked.on("accept")) {
+    return msgWarning
+  }
 })
 
 document.querySelector("form").addEventListener("submit", (event) => {
